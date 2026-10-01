@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Team Tasks</title>
+<meta name="theme-color" content="#16243a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Team Tasks">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#16243a;--mute:#66728a;--line:#dcd9d0;--accent:#1f5eff;--todo:#8a93a6;--doing:#d98a00;--done:#1c8a5a;--danger:#c63d3d;--r:14px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--card:#172033;--ink:#eef1f7;--mute:#9aa6bd;--line:#2a3550;--accent:#6b9bff}}
+:root[data-theme="dark"]{--bg:#0f1624;--card:#172033;--ink:#eef1f7;--mute:#9aa6bd;--line:#2a3550;--accent:#6b9bff}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;font-weight:800;margin:0;letter-spacing:-.02em}
+h2{font-size:1.05rem;margin:0 0 10px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+input,select,button{font:inherit;color:inherit}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);min-height:44px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;min-height:44px;font-weight:600}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.danger{color:var(--danger)}
+button.sm{min-height:36px;padding:6px 10px;font-size:.85rem}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.who{color:var(--mute);font-size:.9rem}
+.grid{display:grid;gap:10px}
+.form{grid-template-columns:1fr}
+@media(min-width:720px){.form{grid-template-columns:2fr 1.2fr 1fr 1fr auto}.emp-form{grid-template-columns:2fr 1fr 1fr auto}.cols{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.stat b{display:block;font-size:1.7rem;font-weight:800;line-height:1.1}
+.stat span{color:var(--mute);font-size:.85rem}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters select{width:auto;flex:1;min-width:130px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.bar{width:5px;align-self:stretch;border-radius:3px;background:var(--todo);flex:none}
+.bar.doing{background:var(--doing)}.bar.done{background:var(--done)}
+.tbody{flex:1;min-width:0}
+.ttl{font-weight:600;word-break:break-word}
+.done .ttl,.task.isdone .ttl{text-decoration:line-through;color:var(--mute)}
+.meta{display:flex;gap:6px 12px;flex-wrap:wrap;color:var(--mute);font-size:.85rem;margin-top:3px}
+.pri-high{color:var(--danger);font-weight:600}.pri-med{color:var(--doing);font-weight:600}
+.overdue{color:var(--danger);font-weight:600}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-height:36px;padding:6px 10px;font-size:.85rem;background:transparent}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.empty{color:var(--mute);text-align:center;padding:24px 8px}
+.emp{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.emp:first-of-type{border-top:0}
+.login{max-width:420px;margin:8vh auto 0}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.tabs button.on{background:var(--ink);color:var(--bg)}
+.err{color:var(--danger);min-height:1.3em;font-size:.9rem;margin:8px 0 0}
+.hint{color:var(--mute);font-size:.85rem;margin-top:12px}
+label{display:block;font-size:.85rem;color:var(--mute);margin:10px 0 4px}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+button{touch-action:manipulation}
+@media(max-width:480px){.wrap{padding:12px}.acts{width:100%}.seg{flex:1}.seg button{flex:1}.stat b{font-size:1.4rem}}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;max-width:90vw;font-size:.9rem}#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+var tok=null, me=null, tasks=[], emps=[], err="", filt={emp:"all",st:"all"}, tt=null;
+try{tok=localStorage.getItem("tt-token");}catch(x){}
+var PRI={high:"High",med:"Medium",low:"Low"}, ST={todo:"To do",doing:"In progress",done:"Done"};
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.className="show";clearTimeout(tt);tt=setTimeout(function(){t.className="";},3500);}
+function clearSession(){tok=null;me=null;try{localStorage.removeItem("tt-token");}catch(x){}}
+function api(method,path,data){
+  var h={"Content-Type":"application/json"}; if(tok)h.Authorization="Bearer "+tok;
+  return fetch("/api"+path,{method:method,headers:h,body:data?JSON.stringify(data):undefined}).then(function(r){
+    return r.json().catch(function(){return {};}).then(function(d){
+      if(!r.ok){if(r.status===401&&tok)clearSession();throw new Error(d.error||"Something went wrong");}
+      return d;});});
+}
+function refresh(){
+  var q=[api("GET","/tasks")]; if(me.role==="admin")q.push(api("GET","/employees"));
+  return Promise.all(q).then(function(r){tasks=r[0].tasks;emps=r[1]?r[1].employees:[];render();});
+}
+function act(p){return p.then(refresh).catch(function(e){toast(e.message);if(!tok)render();});}
+function init(){
+  if(!tok){render();return;}
+  api("GET","/me").then(function(d){me=d.user;return refresh();}).catch(function(){clearSession();render();});
+}
+function render(){document.getElementById("app").innerHTML=!me?loginView():(me.role==="admin"?adminView():empView());}
+function loginView(){
+  return '<div class="card login"><h1>Team Tasks</h1><div class="who">Sign in to see your work.</div>'+
+  '<form onsubmit="login(event)"><label for="un">Username</label><input id="un" autocomplete="username" autocapitalize="none" required>'+
+  '<label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" required>'+
+  '<p class="err">'+esc(err)+'</p><button class="primary" style="width:100%" type="submit">Sign in</button></form>'+
+  '<p class="hint">Admin signs in as <b>admin</b>. Employees use the username and password the admin gave them.</p></div>';
+}
+function login(ev){
+  ev.preventDefault();
+  api("POST","/login",{username:document.getElementById("un").value,password:document.getElementById("pw").value}).then(function(d){
+    tok=d.token;me=d.user;err="";try{localStorage.setItem("tt-token",tok);}catch(x){}return refresh();
+  }).catch(function(x){err=x.message;render();});
+}
+function logout(){api("POST","/logout").catch(function(){}).then(function(){clearSession();tasks=[];emps=[];err="";render();});}
+function header(label){return '<div class="top"><div><h1>Team Tasks</h1><div class="who">'+label+'</div></div><button onclick="logout()">Sign out</button></div>';}
+function seg(t){
+  return '<div class="seg" role="group" aria-label="Change status">'+["todo","doing","done"].map(function(s){
+    return '<button class="'+(t.st===s?"on":"")+'" onclick="setSt('+t.id+',\''+s+'\')">'+ST[s]+'</button>';}).join("")+'</div>';
+}
+function taskRow(t,canDel,showEmp){
+  var today=new Date().toISOString().slice(0,10), late=t.due&&t.due<today&&t.st!=="done";
+  return '<div class="task'+(t.st==="done"?" isdone":"")+'"><div class="bar '+t.st+'"></div><div class="tbody"><div class="ttl">'+esc(t.title)+'</div>'+
+   '<div class="meta">'+(showEmp?'<span>'+esc(t.emp_name)+'</span>':'')+'<span class="pri-'+t.pri+'">'+PRI[t.pri]+' priority</span>'+
+   (t.due?'<span class="'+(late?"overdue":"")+'">'+(late?"Overdue: ":"Due ")+esc(t.due)+'</span>':'')+'</div>'+
+   '<div class="acts">'+seg(t)+(canDel?'<button class="sm danger" onclick="delTask('+t.id+')">Delete</button>':'')+'</div></div></div>';
+}
+function stats(list){
+  var c={todo:0,doing:0,done:0};list.forEach(function(t){c[t.st]++;});
+  return '<div class="stats"><div class="stat"><b>'+c.todo+'</b><span>To do</span></div><div class="stat"><b>'+c.doing+'</b><span>In progress</span></div><div class="stat"><b>'+c.done+'</b><span>Done</span></div></div>';
+}
+function priSel(){return '<select id="np" aria-label="Priority"><option value="low">Low</option><option value="med" selected>Medium</option><option value="high">High</option></select>';}
+function adminView(){
+  var opts=emps.map(function(e){return '<option value="'+e.id+'">'+esc(e.name)+'</option>';}).join("");
+  var list=tasks.filter(function(t){return (filt.emp==="all"||String(t.emp_id)===filt.emp)&&(filt.st==="all"||t.st===filt.st);});
+  return header("Admin · all tasks")+stats(tasks)+
+  '<div class="card"><h2>Assign a task</h2><div class="grid form"><input id="nt" maxlength="200" placeholder="What needs doing?" aria-label="Task title">'+
+  '<select id="na" aria-label="Assign to">'+(opts||'<option value="">Add an employee first</option>')+'</select>'+priSel()+
+  '<input id="nd" type="date" aria-label="Due date"><button class="primary" onclick="addTask()">Assign task</button></div></div>'+
+  '<div class="cols"><div class="card"><h2>Tasks</h2><div class="filters"><select onchange="filt.emp=this.value;render()" aria-label="Filter by employee"><option value="all">All employees</option>'+
+  emps.map(function(e){return '<option value="'+e.id+'"'+(filt.emp===String(e.id)?" selected":"")+'>'+esc(e.name)+'</option>';}).join("")+'</select>'+
+  '<select onchange="filt.st=this.value;render()" aria-label="Filter by status"><option value="all">Any status</option>'+
+  ["todo","doing","done"].map(function(s){return '<option value="'+s+'"'+(filt.st===s?" selected":"")+'>'+ST[s]+'</option>';}).join("")+'</select></div>'+
+  (list.length?list.map(function(t){return taskRow(t,true,true);}).join(""):'<div class="empty">No tasks match. Assign one above.</div>')+'</div>'+
+  '<div class="card"><h2>Employees</h2>'+
+  (emps.length?emps.map(function(e){return '<div class="emp"><span>'+esc(e.name)+'</span><button class="sm danger" onclick="delEmp('+e.id+')">Remove</button></div>';}).join(""):'<div class="empty">No employees yet. Add the first one below.</div>')+
+  '<label for="en2">New employee username</label><input id="en2" maxlength="40" autocapitalize="none"><label for="ep2">Password (6+ characters)</label><input id="ep2" type="password" autocomplete="new-password"><button class="primary" style="width:100%;margin-top:12px" onclick="addEmp()">Add employee</button></div></div>';
+}
+function empView(){
+  var order={doing:0,todo:1,done:2}, mine=tasks.slice().sort(function(a,b){return order[a.st]-order[b.st];});
+  return header("Signed in as "+esc(me.name))+stats(mine)+
+  '<div class="card"><h2>Add a task for yourself</h2><div class="grid form emp-form"><input id="nt" maxlength="200" placeholder="What are you working on?" aria-label="Task title">'+priSel()+
+  '<input id="nd" type="date" aria-label="Due date"><button class="primary" onclick="addTask()">Add task</button></div></div>'+
+  '<div class="card"><h2>My tasks</h2>'+(mine.length?mine.map(function(t){return taskRow(t,t.by==="emp",false);}).join(""):'<div class="empty">Nothing assigned yet. Add a task above.</div>')+'</div>';
+}
+function addTask(){
+  var t=document.getElementById("nt").value.trim(); if(!t){document.getElementById("nt").focus();return;}
+  var b={title:t,pri:document.getElementById("np").value,due:document.getElementById("nd").value};
+  if(me.role==="admin")b.emp_id=+document.getElementById("na").value;
+  act(api("POST","/tasks",b));
+}
+function setSt(id,s){act(api("PATCH","/tasks/"+id,{st:s}));}
+function delTask(id){act(api("DELETE","/tasks/"+id));}
+function addEmp(){act(api("POST","/employees",{name:document.getElementById("en2").value,password:document.getElementById("ep2").value}));}
+function delEmp(id){if(!confirm("Remove this employee and their tasks?"))return;if(filt.emp===String(id))filt.emp="all";act(api("DELETE","/employees/"+id));}
+init();
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){try{navigator.serviceWorker.register("sw.js");}catch(x){}}
+</script>
+</body>
+</html>

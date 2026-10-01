@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: team-tasks
+    runtime: python
+    plan: starter            # persistent disks need a paid plan
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4
+    healthCheckPath: /healthz
+    disk:
+      name: tasks-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DB_PATH
+        value: /var/data/tasks.db
+      - key: TRUST_PROXY
+        value: "1"
+      - key: ADMIN_PASSWORD   # Render asks you for this when you create the Blueprint
+        sync: false

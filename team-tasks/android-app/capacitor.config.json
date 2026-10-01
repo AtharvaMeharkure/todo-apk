@@ -1,0 +1,10 @@
+{
+  "appId": "com.teamtasks.app",
+  "appName": "Team Tasks",
+  "webDir": "www",
+  "server": {
+    "url": "https://YOUR-APP.onrender.com",
+    "cleartext": false,
+    "errorPath": "offline.html"
+  }
+}
